@@ -1,0 +1,28 @@
+{
+  "name": "local-mysql-cache",
+  "version": "1.0.3",
+  "description": "MySQL cache using local json file and ES6 Map",
+  "main": "src/mysql-cache.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/exposebox/local-mysql-cache"
+  },
+  "author": "eran@exposebox.com <Eran Betzalel>",
+  "license": "MIT",
+  "keywords": [
+    "mysql",
+    "cache",
+    "local",
+    "basic"
+  ],
+  "dependencies": {
+    "change-case": "^3.0.1",
+    "debug": "^3.1.0",
+    "underscore": "^1.8.3",
+    "util.promisify": "^1.0.0"
+  },
+  "devDependencies": {
+    "mysql": "^2.15.0",
+    "should": "^13.2.0"
+  }
+}
