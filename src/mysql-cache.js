@@ -206,7 +206,7 @@ class MySqlCache extends EventEmitter {
 
             this.setData(mapData);
 
-            debug('Cache', this.name, 'loaded from file with', mapData.length, 'entries');
+            debug('Cache', this.name, 'loaded from file with', mapData ? mapData.length : 0, 'entries');
         } catch (err) {
             if (err.code === 'ENOENT') {
                 debug(`Cache file is missing (${err.message})`);
