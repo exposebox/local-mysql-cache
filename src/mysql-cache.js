@@ -44,18 +44,30 @@ class MySqlCache extends EventEmitter {
         };
     }
 
-    startCache() {
-        const loadDataPromises = [];
-
-        loadDataPromises.push(this.loadFromDatabaseAndSaveToFile());
-
-        this.reloadTimer = setInterval(() => this.loadFromDatabaseAndSaveToFile(), this.reloadFromMySqlInterval);
+    async startCache() {
+        this.loadDataPromise = new Promise(resolve => this.on('update', resolve));
 
         if (this.shouldSaveToFile) {
-            loadDataPromises.push(this.loadCacheFromFile());
+            await this.loadCacheFromFile();
         }
 
-        this.loadDataPromise = new Promise(resolve => this.on('update', resolve));
+        await this.loadFromDatabaseAndSaveToFile();
+
+        this.reloadTimer = setInterval(async () => {
+            if (this.reloadTimerRunning) {
+                console.warn(`Skipping ${this.name} load from database (already running)`);
+
+                return;
+            }
+
+            this.reloadTimerRunning = true;
+
+            try {
+                await this.loadFromDatabaseAndSaveToFile();
+            } finally {
+                this.reloadTimerRunning = false;
+            }
+        }, this.reloadFromMySqlInterval);
     }
 
     destroy() {
