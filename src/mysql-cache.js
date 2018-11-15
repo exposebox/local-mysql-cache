@@ -91,7 +91,7 @@ class MySqlCache extends EventEmitter {
     async loadFromDatabase() {
         const rows = await this.queryDatabase();
 
-        if (rows == null || rows.length === 0) {
+        if (rows.length === 0) {
             this.setData();
 
             return;
@@ -214,7 +214,7 @@ class MySqlCache extends EventEmitter {
         try {
             const data = await fs.readFile(this.cacheFilePath);
 
-            const mapData = !_.isEmpty(data) ? JSON.parse(data) : null;
+            const mapData = !_.isEmpty(data) ? JSON.parse(data) : undefined;
 
             this.setData(mapData);
 
