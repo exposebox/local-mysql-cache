@@ -212,7 +212,7 @@ class MySqlCache extends EventEmitter {
         debug('Loading cache', this.name, 'from file...');
 
         try {
-            const data = await fs.readFile(this.cacheFilePath);
+            const data = (await fs.readFile(this.cacheFilePath)).toString();
 
             const mapData = !_.isEmpty(data) ? JSON.parse(data) : undefined;
 
