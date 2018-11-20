@@ -1,6 +1,6 @@
 {
   "name": "local-mysql-cache",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "MySQL cache using local json file and ES6 Map",
   "main": "src/mysql-cache.js",
   "repository": {
