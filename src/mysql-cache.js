@@ -89,7 +89,7 @@ class MySqlCache extends EventEmitter {
     }
 
     async loadFromDatabase() {
-        const rows = await this.queryDatabase();
+        const rows = await this.invokeQueryDatabase();
 
         if (rows.length === 0) {
             this.setData();
@@ -180,20 +180,23 @@ class MySqlCache extends EventEmitter {
         this.emit('update');
     }
 
-    async queryDatabase() {
+    async invokeQueryDatabase() {
         debug('Loading cache', this.name, 'from database...');
 
-        const queryDatabasePromise =
-            new Promise((resolve, reject) => {
-                return this.mysqlQueryable
-                    .query(this.sql, [], (err, ...args) => err ? reject(err) : resolve(...args));
-            });
+        const queryDatabasePromise = this.queryDatabase();
 
         const rows = await queryDatabasePromise;
 
         debug('Cache', this.name, 'loaded from database with', rows.length, 'entries');
 
         return rows;
+    }
+
+    async queryDatabase() {
+        return new Promise((resolve, reject) => {
+            return this.mysqlQueryable
+                .query(this.sql, [], (err, ...args) => err ? reject(err) : resolve(...args));
+        });
     }
 
     parseDataRow(row) {
@@ -235,7 +238,7 @@ class MySqlCache extends EventEmitter {
     getValues(key) {
         const itemValues = this.data.get(key);
 
-        if (itemValues == null || itemValues.length === 0) {
+        if (itemValues === undefined || itemValues.length === 0) {
             return [];
         }
 
@@ -245,8 +248,8 @@ class MySqlCache extends EventEmitter {
     getFirstValue(key) {
         const itemValues = this.data.get(key);
 
-        if (itemValues == null || itemValues.length === 0) {
-            return null;
+        if (itemValues === undefined || itemValues.length === 0) {
+            return undefined;
         }
 
         return this.cloneArray([itemValues[0]])[0];
