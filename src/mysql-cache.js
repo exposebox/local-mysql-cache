@@ -193,10 +193,13 @@ class MySqlCache extends EventEmitter {
     }
 
     async queryDatabase() {
-        return new Promise((resolve, reject) => {
-            return this.mysqlQueryable
-                .query(this.sql, [], (err, ...args) => err ? reject(err) : resolve(...args));
-        });
+        if (this.mysqlQueryable.query.constructor.name === 'AsyncFunction') {
+            return this.mysqlQueryable.query(this.sql, []);
+        } else {
+            return new Promise((resolve, reject) => {
+                return this.mysqlQueryable.query(this.sql, [], (err, ...args) => err ? reject(err) : resolve(...args));
+            });
+        }
     }
 
     parseDataRow(row) {
